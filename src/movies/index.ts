@@ -5,6 +5,7 @@ import { MovieIdSchema, MovieSchema } from './schema'
 const API_TAG = ['Movies']
 
 export const moviesRoute = new OpenAPIHono()
+  // get all movies
   .openapi(
     {
       method: 'get',
@@ -21,6 +22,7 @@ export const moviesRoute = new OpenAPIHono()
     },
   )
 
+  // get movie by id
   .openapi(
     {
       method: 'get',
@@ -50,6 +52,7 @@ export const moviesRoute = new OpenAPIHono()
     },
   )
 
+  // create a new movie
   .openapi(
     {
       method: 'post',
@@ -81,6 +84,7 @@ export const moviesRoute = new OpenAPIHono()
     },
   )
 
+  // delete all movies
   .openapi(
     {
       method: 'delete',
@@ -99,6 +103,7 @@ export const moviesRoute = new OpenAPIHono()
     },
   )
 
+  // delete movie by id
   .openapi(
     {
       method: 'delete',
@@ -130,6 +135,7 @@ export const moviesRoute = new OpenAPIHono()
     },
   )
 
+  // update movie by id
   .openapi(
     {
       method: 'put',
