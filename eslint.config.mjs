@@ -6,4 +6,8 @@ export default antfu({
       'ts/consistent-type-definitions': ['error', 'type'],
     },
   },
+  rules: {
+    'curly': ['error', 'all'],
+    'style/brace-style': ['error', '1tbs'],
+  },
 })
