@@ -10,4 +10,7 @@ export default antfu({
     'curly': ['error', 'all'],
     'style/brace-style': ['error', '1tbs'],
   },
+  formatters: {
+    markdown: 'prettier',
+  },
 })
