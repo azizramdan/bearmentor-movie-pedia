@@ -1,8 +1,8 @@
-import { Hono } from "hono";
+import { Hono } from 'hono'
 
 export const moviesRoute = new Hono()
-    .get('/', (c) => {
-        return c.json({ 
-            message: 'Success'
-         })
+  .get('/', (c) => {
+    return c.json({
+      message: 'Success',
     })
+  })
