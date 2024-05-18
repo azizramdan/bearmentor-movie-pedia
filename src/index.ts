@@ -10,6 +10,7 @@ export default new OpenAPIHono({ strict: false })
     info: {
       version: '0.0.1',
       title: 'MoviePedia API',
+      description: 'Explore a world of cinematic insights with ease using the **MoviePedia API**. Access comprehensive movie data for seamless exploration and discovery.',
     },
   })
   .get('/api', swaggerUI({ url: '/api-spec' }))
