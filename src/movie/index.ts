@@ -64,7 +64,7 @@ export const moviesRoute = new Hono()
       genres: body.genres ?? movie.genres,
       directors: body.directors ?? movie.directors,
       writers: body.writers ?? movie.writers,
-      poster: body.poster ?? movie.poster,
+      posterUrl: body.posterUrl ?? movie.posterUrl,
       type: body.type ?? movie.type,
       plot: body.plot ?? movie.plot,
       actors: body.actors ?? movie.actors,
