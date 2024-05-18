@@ -4,7 +4,7 @@ Explore a world of cinematic insights with ease using the **MoviePedia API**. Ac
 
 ## REST API Endpoints
 
-Base API URL: https://bearmentor-movie-pedia.azizramdan.id/api
+Base API URL: https://bearmentor-moviepedia.azizramdan.id/api
 
 | Endpoint      | HTTP     | Description        |
 | ------------- | -------- | ------------------ |
