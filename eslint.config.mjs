@@ -4,6 +4,7 @@ export default antfu({
   typescript: {
     overrides: {
       'ts/consistent-type-definitions': ['error', 'type'],
+      'node/prefer-global/process': ['off'],
     },
   },
   rules: {
