@@ -1,9 +1,11 @@
 import { swaggerUI } from '@hono/swagger-ui'
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { moviesRoute } from './movies'
+import { dbRoute } from './db/seed'
 
 export default new OpenAPIHono({ strict: false })
   .route('/api/movies', moviesRoute)
+  .route('/api/db', dbRoute)
 
   .doc31('/api-spec', {
     openapi: '3.1.0',
