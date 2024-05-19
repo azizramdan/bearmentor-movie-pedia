@@ -1,4 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
+import { db } from '../db/db'
 import { movies } from './data'
 import { MovieIdSchema, MovieSchema } from './schema'
 
@@ -17,7 +18,71 @@ export const moviesRoute = new OpenAPIHono()
       },
       tags: API_TAG,
     },
-    (c) => {
+    async (c) => {
+      const movies = (await db.query.movies
+        .findMany({
+          with: {
+            moviesToGenres: {
+              columns: {},
+              with: {
+                genre: {
+                  columns: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+            moviesToDirectors: {
+              columns: {},
+              with: {
+                director: {
+                  columns: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+            moviesToWriters: {
+              columns: {},
+              with: {
+                writer: {
+                  columns: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+            moviesToActors: {
+              columns: {},
+              with: {
+                actor: {
+                  columns: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        }))
+        .map(mv => ({
+          id: mv.id,
+          title: mv.title,
+          year: mv.year,
+          posterUrl: mv.posterUrl,
+          type: mv.type,
+          plot: mv.plot,
+          createdAt: mv.createdAt,
+          updatedAt: mv.updatedAt,
+          genres: mv.moviesToGenres.map(g => ({ id: g.genre.id, name: g.genre.name })),
+          directors: mv.moviesToDirectors.map(d => ({ id: d.director.id, name: d.director.name })),
+          writers: mv.moviesToWriters.map(w => ({ id: w.writer.id, name: w.writer.name })),
+          actors: mv.moviesToActors.map(a => ({ id: a.actor.id, name: a.actor.name })),
+        }))
+
       return c.json(movies)
     },
   )
