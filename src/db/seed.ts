@@ -1,6 +1,6 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { db } from './db'
-import { actors, directors, genres, movies, moviesActors, moviesDirectors, moviesGenres, moviesWriters, writers } from './schema'
+import { actors, directors, genres, movies, moviesToActors, moviesToDirectors, moviesToGenres, moviesToWriters, writers } from './schema'
 
 export const dbRoute = new OpenAPIHono()
   // seed database
@@ -162,20 +162,20 @@ export const dbRoute = new OpenAPIHono()
             })
             .returning({ id: movies.id })
 
-          const insertGenres = tx.insert(moviesGenres).values(movie.genres.map(genre => ({
+          const insertGenres = tx.insert(moviesToGenres).values(movie.genres.map(genre => ({
             genreId: genresFromDB.find(_ => _.name === genre)!.id,
             movieId: movieFromDb[0].id,
           })))
-          const insertDirectors = tx.insert(moviesDirectors).values(movie.directors.map(director => ({
-            genreId: directorsFromDB.find(_ => _.name === director)!.id,
+          const insertDirectors = tx.insert(moviesToDirectors).values(movie.directors.map(director => ({
+            directorId: directorsFromDB.find(_ => _.name === director)!.id,
             movieId: movieFromDb[0].id,
           })))
-          const insertWriters = tx.insert(moviesWriters).values(movie.writers.map(writer => ({
-            genreId: writersFromDB.find(_ => _.name === writer)!.id,
+          const insertWriters = tx.insert(moviesToWriters).values(movie.writers.map(writer => ({
+            writerId: writersFromDB.find(_ => _.name === writer)!.id,
             movieId: movieFromDb[0].id,
           })))
-          const insertActors = tx.insert(moviesActors).values(movie.actors.map(actor => ({
-            genreId: actorsFromDB.find(_ => _.name === actor)!.id,
+          const insertActors = tx.insert(moviesToActors).values(movie.actors.map(actor => ({
+            actorId: actorsFromDB.find(_ => _.name === actor)!.id,
             movieId: movieFromDb[0].id,
           })))
 

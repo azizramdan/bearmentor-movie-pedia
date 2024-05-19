@@ -1,5 +1,5 @@
 {
-  "id": "7435df1c-ad4b-4f1f-bb15-c64d1080b613",
+  "id": "38c735e4-f006-4892-b056-d6201b89640d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -18,7 +18,7 @@
           "name": "name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -54,7 +54,7 @@
           "name": "name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -90,7 +90,7 @@
           "name": "name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -126,31 +126,31 @@
           "name": "title",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "year": {
           "name": "year",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "posterUrl": {
           "name": "posterUrl",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "type": {
           "name": "type",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "plot": {
           "name": "plot",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -172,21 +172,21 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.moviesActors": {
-      "name": "moviesActors",
+    "public.moviesToActors": {
+      "name": "moviesToActors",
       "schema": "",
       "columns": {
         "movieId": {
           "name": "movieId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "actorId": {
           "name": "actorId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -205,9 +205,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "moviesActors_movieId_movies_id_fk": {
-          "name": "moviesActors_movieId_movies_id_fk",
-          "tableFrom": "moviesActors",
+        "moviesToActors_movieId_movies_id_fk": {
+          "name": "moviesToActors_movieId_movies_id_fk",
+          "tableFrom": "moviesToActors",
           "tableTo": "movies",
           "columnsFrom": [
             "movieId"
@@ -218,9 +218,9 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "moviesActors_actorId_actors_id_fk": {
-          "name": "moviesActors_actorId_actors_id_fk",
-          "tableFrom": "moviesActors",
+        "moviesToActors_actorId_actors_id_fk": {
+          "name": "moviesToActors_actorId_actors_id_fk",
+          "tableFrom": "moviesToActors",
           "tableTo": "actors",
           "columnsFrom": [
             "actorId"
@@ -232,33 +232,32 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "moviesActors_movieId_actorId_unique": {
-          "name": "moviesActors_movieId_actorId_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "moviesToActors_movieId_actorId_pk": {
+          "name": "moviesToActors_movieId_actorId_pk",
           "columns": [
             "movieId",
             "actorId"
           ]
         }
-      }
+      },
+      "uniqueConstraints": {}
     },
-    "public.moviesDirectors": {
-      "name": "moviesDirectors",
+    "public.moviesToDirectors": {
+      "name": "moviesToDirectors",
       "schema": "",
       "columns": {
         "movieId": {
           "name": "movieId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "directorId": {
           "name": "directorId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -277,9 +276,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "moviesDirectors_movieId_movies_id_fk": {
-          "name": "moviesDirectors_movieId_movies_id_fk",
-          "tableFrom": "moviesDirectors",
+        "moviesToDirectors_movieId_movies_id_fk": {
+          "name": "moviesToDirectors_movieId_movies_id_fk",
+          "tableFrom": "moviesToDirectors",
           "tableTo": "movies",
           "columnsFrom": [
             "movieId"
@@ -290,9 +289,9 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "moviesDirectors_directorId_directors_id_fk": {
-          "name": "moviesDirectors_directorId_directors_id_fk",
-          "tableFrom": "moviesDirectors",
+        "moviesToDirectors_directorId_directors_id_fk": {
+          "name": "moviesToDirectors_directorId_directors_id_fk",
+          "tableFrom": "moviesToDirectors",
           "tableTo": "directors",
           "columnsFrom": [
             "directorId"
@@ -304,33 +303,32 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "moviesDirectors_movieId_directorId_unique": {
-          "name": "moviesDirectors_movieId_directorId_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "moviesToDirectors_movieId_directorId_pk": {
+          "name": "moviesToDirectors_movieId_directorId_pk",
           "columns": [
             "movieId",
             "directorId"
           ]
         }
-      }
+      },
+      "uniqueConstraints": {}
     },
-    "public.moviesGenres": {
-      "name": "moviesGenres",
+    "public.moviesToGenres": {
+      "name": "moviesToGenres",
       "schema": "",
       "columns": {
         "movieId": {
           "name": "movieId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "genreId": {
           "name": "genreId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -349,9 +347,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "moviesGenres_movieId_movies_id_fk": {
-          "name": "moviesGenres_movieId_movies_id_fk",
-          "tableFrom": "moviesGenres",
+        "moviesToGenres_movieId_movies_id_fk": {
+          "name": "moviesToGenres_movieId_movies_id_fk",
+          "tableFrom": "moviesToGenres",
           "tableTo": "movies",
           "columnsFrom": [
             "movieId"
@@ -362,9 +360,9 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "moviesGenres_genreId_genres_id_fk": {
-          "name": "moviesGenres_genreId_genres_id_fk",
-          "tableFrom": "moviesGenres",
+        "moviesToGenres_genreId_genres_id_fk": {
+          "name": "moviesToGenres_genreId_genres_id_fk",
+          "tableFrom": "moviesToGenres",
           "tableTo": "genres",
           "columnsFrom": [
             "genreId"
@@ -376,33 +374,32 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "moviesGenres_movieId_genreId_unique": {
-          "name": "moviesGenres_movieId_genreId_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "moviesToGenres_movieId_genreId_pk": {
+          "name": "moviesToGenres_movieId_genreId_pk",
           "columns": [
             "movieId",
             "genreId"
           ]
         }
-      }
+      },
+      "uniqueConstraints": {}
     },
-    "public.moviesWriters": {
-      "name": "moviesWriters",
+    "public.moviesToWriters": {
+      "name": "moviesToWriters",
       "schema": "",
       "columns": {
         "movieId": {
           "name": "movieId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "writerId": {
           "name": "writerId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -421,9 +418,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "moviesWriters_movieId_movies_id_fk": {
-          "name": "moviesWriters_movieId_movies_id_fk",
-          "tableFrom": "moviesWriters",
+        "moviesToWriters_movieId_movies_id_fk": {
+          "name": "moviesToWriters_movieId_movies_id_fk",
+          "tableFrom": "moviesToWriters",
           "tableTo": "movies",
           "columnsFrom": [
             "movieId"
@@ -434,9 +431,9 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "moviesWriters_writerId_writers_id_fk": {
-          "name": "moviesWriters_writerId_writers_id_fk",
-          "tableFrom": "moviesWriters",
+        "moviesToWriters_writerId_writers_id_fk": {
+          "name": "moviesToWriters_writerId_writers_id_fk",
+          "tableFrom": "moviesToWriters",
           "tableTo": "writers",
           "columnsFrom": [
             "writerId"
@@ -448,17 +445,16 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "moviesWriters_movieId_writerId_unique": {
-          "name": "moviesWriters_movieId_writerId_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "moviesToWriters_movieId_writerId_pk": {
+          "name": "moviesToWriters_movieId_writerId_pk",
           "columns": [
             "movieId",
             "writerId"
           ]
         }
-      }
+      },
+      "uniqueConstraints": {}
     },
     "public.writers": {
       "name": "writers",
@@ -474,7 +470,7 @@
           "name": "name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
