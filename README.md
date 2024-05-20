@@ -1,6 +1,6 @@
-# MoviePedia API
+# MoviePedia REST API
 
-Explore a world of cinematic insights with ease using the **MoviePedia API**. Access comprehensive movie data for seamless exploration and discovery.
+MoviePedia REST API is a web service that provides access to a vast collection of movie data. It allows users to search for movies, retrieve movie details, and perform various operations related to movies.
 
 ## API Specification
 
