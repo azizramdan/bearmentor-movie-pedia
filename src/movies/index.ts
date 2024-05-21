@@ -318,51 +318,88 @@ export const moviesRoute = new OpenAPIHono()
           .set(body)
           .where(eq(dbSchema.movies.id, id))
 
-        const genres = body.genres || []
-        const directors = body.directors || []
-        const writers = body.writers || []
-        const actors = body.actors || []
+        const genres = body.genres
+        const directors = body.directors
+        const writers = body.writers
+        const actors = body.actors
+
+        const updateGenres = async () => {
+          if (!genres || !genres.length) {
+            return
+          }
+
+          await Promise.all([
+            tx.insert(dbSchema.moviesToGenres)
+              .values((genres).map(genreId => ({
+                genreId,
+                movieId: id,
+              })))
+              .onConflictDoNothing(),
+
+            tx.delete(dbSchema.moviesToGenres)
+              .where(and(eq(dbSchema.moviesToGenres.movieId, id), notInArray(dbSchema.moviesToGenres.genreId, genres))),
+          ])
+        }
+
+        const updateDirectors = async () => {
+          if (!directors || !directors.length) {
+            return
+          }
+
+          await Promise.all([
+            tx.insert(dbSchema.moviesToDirectors)
+              .values((directors).map(directorId => ({
+                directorId,
+                movieId: id,
+              })))
+              .onConflictDoNothing(),
+
+            tx.delete(dbSchema.moviesToDirectors)
+              .where(and(eq(dbSchema.moviesToDirectors.movieId, id), notInArray(dbSchema.moviesToDirectors.directorId, directors))),
+          ])
+        }
+
+        const updateWriters = async () => {
+          if (!writers || !writers.length) {
+            return
+          }
+
+          await Promise.all([
+            tx.insert(dbSchema.moviesToWriters)
+              .values((writers).map(writerId => ({
+                writerId,
+                movieId: id,
+              })))
+              .onConflictDoNothing(),
+
+            tx.delete(dbSchema.moviesToWriters)
+              .where(and(eq(dbSchema.moviesToWriters.movieId, id), notInArray(dbSchema.moviesToWriters.writerId, writers))),
+          ])
+        }
+
+        const updateActors = async () => {
+          if (!actors || !actors.length) {
+            return
+          }
+
+          await Promise.all([
+            tx.insert(dbSchema.moviesToActors)
+              .values((actors).map(actorId => ({
+                actorId,
+                movieId: id,
+              })))
+              .onConflictDoNothing(),
+
+            tx.delete(dbSchema.moviesToActors)
+              .where(and(eq(dbSchema.moviesToActors.movieId, id), notInArray(dbSchema.moviesToActors.actorId, actors))),
+          ])
+        }
 
         await Promise.all([
-          tx.insert(dbSchema.moviesToGenres)
-            .values((genres).map(genreId => ({
-              genreId,
-              movieId: id,
-            })))
-            .onConflictDoNothing(),
-
-          tx.insert(dbSchema.moviesToDirectors)
-            .values((directors).map(directorId => ({
-              directorId,
-              movieId: id,
-            })))
-            .onConflictDoNothing(),
-
-          tx.insert(dbSchema.moviesToWriters)
-            .values((writers).map(writerId => ({
-              writerId,
-              movieId: id,
-            })))
-            .onConflictDoNothing(),
-
-          tx.insert(dbSchema.moviesToActors)
-            .values((actors).map(actorId => ({
-              actorId,
-              movieId: id,
-            })))
-            .onConflictDoNothing(),
-
-          tx.delete(dbSchema.moviesToGenres)
-            .where(and(eq(dbSchema.moviesToGenres.movieId, id), notInArray(dbSchema.moviesToGenres.genreId, genres))),
-
-          tx.delete(dbSchema.moviesToDirectors)
-            .where(and(eq(dbSchema.moviesToDirectors.movieId, id), notInArray(dbSchema.moviesToDirectors.directorId, directors))),
-
-          tx.delete(dbSchema.moviesToWriters)
-            .where(and(eq(dbSchema.moviesToWriters.movieId, id), notInArray(dbSchema.moviesToWriters.writerId, writers))),
-
-          tx.delete(dbSchema.moviesToActors)
-            .where(and(eq(dbSchema.moviesToActors.movieId, id), notInArray(dbSchema.moviesToActors.actorId, actors))),
+          updateGenres(),
+          updateDirectors(),
+          updateWriters(),
+          updateActors(),
         ])
       })
 
