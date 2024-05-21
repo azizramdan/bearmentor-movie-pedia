@@ -313,8 +313,8 @@ export const moviesRoute = new OpenAPIHono()
         return c.json({ message: 'Movie not found' }, 404)
       }
 
-      const movie = await db.transaction(async (tx) => {
-        const movie = await tx.update(dbSchema.movies)
+      await db.transaction(async (tx) => {
+        await tx.update(dbSchema.movies)
           .set(body)
           .where(eq(dbSchema.movies.id, id))
 
@@ -364,13 +364,7 @@ export const moviesRoute = new OpenAPIHono()
           tx.delete(dbSchema.moviesToActors)
             .where(and(eq(dbSchema.moviesToActors.movieId, id), notInArray(dbSchema.moviesToActors.actorId, actors))),
         ])
-
-        return movie
       })
-
-      if (!movie) {
-        return c.json({ message: 'Movie not found' }, 404)
-      }
 
       return c.json({ message: 'Movie updated' })
     },
