@@ -1,8 +1,7 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
-import { eq } from 'drizzle-orm'
+import { and, eq, notInArray } from 'drizzle-orm'
 import { db } from '../db/db'
 import * as dbSchema from '../db/schema'
-import { movies } from './data'
 import { MovieIdSchema, MovieRequestSchema } from './schema'
 
 const API_TAG = ['Movies']
@@ -301,29 +300,78 @@ export const moviesRoute = new OpenAPIHono()
       },
       tags: API_TAG,
     },
-    (c) => {
+    async (c) => {
+      const body = c.req.valid('json')
       const id = Number(c.req.param('id'))
-      const index = movies.findIndex(m => m.id === id)
 
-      if (index === -1) {
+      const exists = await db.query.movies.findFirst({
+        columns: { id: true },
+        where: eq(dbSchema.movies.id, id),
+      })
+
+      if (!exists) {
         return c.json({ message: 'Movie not found' }, 404)
       }
 
-      const body = c.req.valid('json')
-      const movie = movies[index]
+      const movie = await db.transaction(async (tx) => {
+        const movie = await tx.update(dbSchema.movies)
+          .set(body)
+          .where(eq(dbSchema.movies.id, id))
 
-      movies[index] = { id, ...{
-        title: body.title ?? movie.title,
-        year: body.year ?? movie.year,
-        genres: body.genres ?? movie.genres,
-        directors: body.directors ?? movie.directors,
-        writers: body.writers ?? movie.writers,
-        posterUrl: body.posterUrl ?? movie.posterUrl,
-        type: body.type ?? movie.type,
-        plot: body.plot ?? movie.plot,
-        actors: body.actors ?? movie.actors,
-      } }
+        const genres = body.genres || []
+        const directors = body.directors || []
+        const writers = body.writers || []
+        const actors = body.actors || []
 
-      return c.json(movies[index])
+        await Promise.all([
+          tx.insert(dbSchema.moviesToGenres)
+            .values((genres).map(genreId => ({
+              genreId,
+              movieId: id,
+            })))
+            .onConflictDoNothing(),
+
+          tx.insert(dbSchema.moviesToDirectors)
+            .values((directors).map(directorId => ({
+              directorId,
+              movieId: id,
+            })))
+            .onConflictDoNothing(),
+
+          tx.insert(dbSchema.moviesToWriters)
+            .values((writers).map(writerId => ({
+              writerId,
+              movieId: id,
+            })))
+            .onConflictDoNothing(),
+
+          tx.insert(dbSchema.moviesToActors)
+            .values((actors).map(actorId => ({
+              actorId,
+              movieId: id,
+            })))
+            .onConflictDoNothing(),
+
+          tx.delete(dbSchema.moviesToGenres)
+            .where(and(eq(dbSchema.moviesToGenres.movieId, id), notInArray(dbSchema.moviesToGenres.genreId, genres))),
+
+          tx.delete(dbSchema.moviesToDirectors)
+            .where(and(eq(dbSchema.moviesToDirectors.movieId, id), notInArray(dbSchema.moviesToDirectors.directorId, directors))),
+
+          tx.delete(dbSchema.moviesToWriters)
+            .where(and(eq(dbSchema.moviesToWriters.movieId, id), notInArray(dbSchema.moviesToWriters.writerId, writers))),
+
+          tx.delete(dbSchema.moviesToActors)
+            .where(and(eq(dbSchema.moviesToActors.movieId, id), notInArray(dbSchema.moviesToActors.actorId, actors))),
+        ])
+
+        return movie
+      })
+
+      if (!movie) {
+        return c.json({ message: 'Movie not found' }, 404)
+      }
+
+      return c.json({ message: 'Movie updated' })
     },
   )
