@@ -1,33 +1,32 @@
-import type { SQL } from 'drizzle-orm'
-import { relations, sql } from 'drizzle-orm'
+import { relations } from 'drizzle-orm'
 import { integer, pgTable, primaryKey, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core'
 
 export const genres = pgTable('genres', {
   id: serial('id').primaryKey(),
   name: varchar('name').notNull(),
   createdAt: timestamp('createdAt').defaultNow(),
-  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate((): SQL => sql`now()`),
+  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate(() => new Date()),
 })
 
 export const directors = pgTable('directors', {
   id: serial('id').primaryKey(),
   name: varchar('name').notNull(),
   createdAt: timestamp('createdAt').defaultNow(),
-  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate((): SQL => sql`now()`),
+  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate(() => new Date()),
 })
 
 export const writers = pgTable('writers', {
   id: serial('id').primaryKey(),
   name: varchar('name').notNull(),
   createdAt: timestamp('createdAt').defaultNow(),
-  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate((): SQL => sql`now()`),
+  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate(() => new Date()),
 })
 
 export const actors = pgTable('actors', {
   id: serial('id').primaryKey(),
   name: varchar('name').notNull(),
   createdAt: timestamp('createdAt').defaultNow(),
-  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate((): SQL => sql`now()`),
+  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate(() => new Date()),
 })
 
 export const movies = pgTable('movies', {
@@ -38,7 +37,7 @@ export const movies = pgTable('movies', {
   type: varchar('type').notNull(),
   plot: text('plot').notNull(),
   createdAt: timestamp('createdAt').defaultNow(),
-  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate((): SQL => sql`now()`),
+  updatedAt: timestamp('updatedAt').defaultNow().$onUpdate(() => new Date()),
 })
 
 export const moviesToGenres = pgTable(
@@ -47,7 +46,7 @@ export const moviesToGenres = pgTable(
     movieId: integer('movieId').notNull().references(() => movies.id, { onDelete: 'cascade' }),
     genreId: integer('genreId').notNull().references(() => genres.id, { onDelete: 'cascade' }),
     createdAt: timestamp('createdAt').defaultNow(),
-    updatedAt: timestamp('updatedAt').defaultNow().$onUpdate((): SQL => sql`now()`),
+    updatedAt: timestamp('updatedAt').defaultNow().$onUpdate(() => new Date()),
   },
   t => ({
     pk: primaryKey({ columns: [t.movieId, t.genreId] }),
@@ -60,7 +59,7 @@ export const moviesToDirectors = pgTable(
     movieId: integer('movieId').notNull().references(() => movies.id, { onDelete: 'cascade' }),
     directorId: integer('directorId').notNull().references(() => directors.id, { onDelete: 'cascade' }),
     createdAt: timestamp('createdAt').defaultNow(),
-    updatedAt: timestamp('updatedAt').defaultNow().$onUpdate((): SQL => sql`now()`),
+    updatedAt: timestamp('updatedAt').defaultNow().$onUpdate(() => new Date()),
   },
   t => ({
     pk: primaryKey({ columns: [t.movieId, t.directorId] }),
@@ -73,7 +72,7 @@ export const moviesToWriters = pgTable(
     movieId: integer('movieId').notNull().references(() => movies.id, { onDelete: 'cascade' }),
     writerId: integer('writerId').notNull().references(() => writers.id, { onDelete: 'cascade' }),
     createdAt: timestamp('createdAt').defaultNow(),
-    updatedAt: timestamp('updatedAt').defaultNow().$onUpdate((): SQL => sql`now()`),
+    updatedAt: timestamp('updatedAt').defaultNow().$onUpdate(() => new Date()),
   },
   t => ({
     pk: primaryKey({ columns: [t.movieId, t.writerId] }),
@@ -86,7 +85,7 @@ export const moviesToActors = pgTable(
     movieId: integer('movieId').notNull().references(() => movies.id, { onDelete: 'cascade' }),
     actorId: integer('actorId').notNull().references(() => actors.id, { onDelete: 'cascade' }),
     createdAt: timestamp('createdAt').defaultNow(),
-    updatedAt: timestamp('updatedAt').defaultNow().$onUpdate((): SQL => sql`now()`),
+    updatedAt: timestamp('updatedAt').defaultNow().$onUpdate(() => new Date()),
   },
   t => ({
     pk: primaryKey({ columns: [t.movieId, t.actorId] }),
