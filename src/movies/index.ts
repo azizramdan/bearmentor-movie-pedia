@@ -1,7 +1,8 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { db } from '../db/db'
+import * as dbSchema from '../db/schema'
 import { movies } from './data'
-import { MovieIdSchema, MovieSchema } from './schema'
+import { MovieIdSchema, MovieRequestSchema } from './schema'
 
 const API_TAG = ['Movies']
 
@@ -185,7 +186,7 @@ export const moviesRoute = new OpenAPIHono()
         body: {
           content: {
             'application/json': {
-              schema: MovieSchema,
+              schema: MovieRequestSchema,
             },
           },
         },
@@ -197,12 +198,33 @@ export const moviesRoute = new OpenAPIHono()
       },
       tags: API_TAG,
     },
-    (c) => {
+    async (c) => {
       const body = c.req.valid('json')
 
-      const id = Number.parseInt((Math.random() * 10000000000).toString())
-      const movie = { id, ...body }
-      movies.push(movie)
+      const movie = await db.transaction(async (tx) => {
+        const movie = (await tx.insert(dbSchema.movies).values(body).returning())[0]
+
+        await Promise.all([
+          tx.insert(dbSchema.moviesToGenres).values(body.genres.map(genreId => ({
+            genreId,
+            movieId: movie.id,
+          }))),
+          tx.insert(dbSchema.moviesToDirectors).values(body.directors.map(directorId => ({
+            directorId,
+            movieId: movie.id,
+          }))),
+          tx.insert(dbSchema.moviesToWriters).values(body.writers.map(writerId => ({
+            writerId,
+            movieId: movie.id,
+          }))),
+          tx.insert(dbSchema.moviesToActors).values(body.actors.map(actorId => ({
+            actorId,
+            movieId: movie.id,
+          }))),
+        ])
+
+        return movie
+      })
 
       return c.json(movie, 201)
     },
@@ -269,7 +291,7 @@ export const moviesRoute = new OpenAPIHono()
         body: {
           content: {
             'application/json': {
-              schema: MovieSchema.partial(),
+              schema: MovieRequestSchema.partial(),
             },
           },
         },
