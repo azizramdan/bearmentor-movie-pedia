@@ -109,7 +109,7 @@ export const moviesRoute = new OpenAPIHono()
     },
     async (c) => {
       const movie = (await db.query.movies.findFirst({
-        where: ({ id }) => eq(id, Number(c.req.param('id'))),
+        where: (eq(dbSchema.movies.id, Number(c.req.param('id')))),
         with: {
           moviesToGenres: {
             columns: {},
