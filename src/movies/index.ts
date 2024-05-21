@@ -244,8 +244,8 @@ export const moviesRoute = new OpenAPIHono()
       },
       tags: API_TAG,
     },
-    (c) => {
-      movies.length = 0
+    async (c) => {
+      await db.delete(dbSchema.movies)
 
       return c.json({ message: 'Movies deleted' })
     },
