@@ -68,19 +68,19 @@ export const moviesRoute = new OpenAPIHono()
             },
           },
         }))
-        .map(mv => ({
-          id: mv.id,
-          title: mv.title,
-          year: mv.year,
-          posterUrl: mv.posterUrl,
-          type: mv.type,
-          plot: mv.plot,
-          createdAt: mv.createdAt,
-          updatedAt: mv.updatedAt,
-          genres: mv.moviesToGenres.map(g => ({ id: g.genre.id, name: g.genre.name })),
-          directors: mv.moviesToDirectors.map(d => ({ id: d.director.id, name: d.director.name })),
-          writers: mv.moviesToWriters.map(w => ({ id: w.writer.id, name: w.writer.name })),
-          actors: mv.moviesToActors.map(a => ({ id: a.actor.id, name: a.actor.name })),
+        .map(movie => ({
+          id: movie.id,
+          title: movie.title,
+          year: movie.year,
+          posterUrl: movie.posterUrl,
+          type: movie.type,
+          plot: movie.plot,
+          createdAt: movie.createdAt,
+          updatedAt: movie.updatedAt,
+          genres: movie.moviesToGenres.map(g => ({ id: g.genre.id, name: g.genre.name })),
+          directors: movie.moviesToDirectors.map(d => ({ id: d.director.id, name: d.director.name })),
+          writers: movie.moviesToWriters.map(w => ({ id: w.writer.id, name: w.writer.name })),
+          actors: movie.moviesToActors.map(a => ({ id: a.actor.id, name: a.actor.name })),
         }))
 
       return c.json(movies)
