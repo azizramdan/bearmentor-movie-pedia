@@ -1,6 +1,6 @@
 import { swaggerUI } from '@hono/swagger-ui'
 import { OpenAPIHono } from '@hono/zod-openapi'
-import { moviesRoute } from './movies'
+import { moviesRoute } from './movies/route'
 import { dbRoute } from './db/seed'
 import { WelcomePage } from './welcome'
 
