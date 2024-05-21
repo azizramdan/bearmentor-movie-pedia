@@ -269,15 +269,8 @@ export const moviesRoute = new OpenAPIHono()
       },
       tags: API_TAG,
     },
-    (c) => {
-      const id = Number(c.req.param('id'))
-      const index = movies.findIndex(m => m.id === id)
-
-      if (index === -1) {
-        return c.json({ message: 'Movie not found' }, 404)
-      }
-
-      movies.splice(index, 1)
+    async (c) => {
+      await db.delete(dbSchema.movies).where(eq(dbSchema.movies.id, Number(c.req.param('id'))))
 
       return c.json({ message: 'Movie deleted' })
     },
