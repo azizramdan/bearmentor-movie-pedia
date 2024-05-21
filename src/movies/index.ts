@@ -105,15 +105,74 @@ export const moviesRoute = new OpenAPIHono()
       },
       tags: API_TAG,
     },
-    (c) => {
-      const id = Number(c.req.param('id'))
-      const movie = movies.find(m => m.id === id)
+    async (c) => {
+      const movie = (await db.query.movies.findFirst({
+        with: {
+          moviesToGenres: {
+            columns: {},
+            with: {
+              genre: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          moviesToDirectors: {
+            columns: {},
+            with: {
+              director: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          moviesToWriters: {
+            columns: {},
+            with: {
+              writer: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          moviesToActors: {
+            columns: {},
+            with: {
+              actor: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      }))
 
       if (!movie) {
         return c.json({ message: 'Movie not found' }, 404)
       }
 
-      return c.json(movie)
+      return c.json({
+        id: movie.id,
+        title: movie.title,
+        year: movie.year,
+        posterUrl: movie.posterUrl,
+        type: movie.type,
+        plot: movie.plot,
+        createdAt: movie.createdAt,
+        updatedAt: movie.updatedAt,
+        genres: movie.moviesToGenres.map(g => ({ id: g.genre.id, name: g.genre.name })),
+        directors: movie.moviesToDirectors.map(d => ({ id: d.director.id, name: d.director.name })),
+        writers: movie.moviesToWriters.map(w => ({ id: w.writer.id, name: w.writer.name })),
+        actors: movie.moviesToActors.map(a => ({ id: a.actor.id, name: a.actor.name })),
+      })
     },
   )
 
