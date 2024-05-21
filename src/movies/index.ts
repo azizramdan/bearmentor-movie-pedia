@@ -1,4 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
+import { eq } from 'drizzle-orm'
 import { db } from '../db/db'
 import * as dbSchema from '../db/schema'
 import { movies } from './data'
@@ -108,6 +109,7 @@ export const moviesRoute = new OpenAPIHono()
     },
     async (c) => {
       const movie = (await db.query.movies.findFirst({
+        where: ({ id }) => eq(id, Number(c.req.param('id'))),
         with: {
           moviesToGenres: {
             columns: {},
