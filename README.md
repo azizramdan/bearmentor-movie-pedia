@@ -15,13 +15,25 @@ You can also access the following:
 
 ## Getting Started
 
-To install dependencies:
+Set up `.env` by copying from `.env.example` for reference
+
+```sh
+cp .env.example .env
+```
+
+Install dependencies
 
 ```sh
 bun install
 ```
 
-To run:
+Run DB migration
+
+```sh
+bun run db:migrate
+```
+
+Then you can run
 
 ```sh
 bun run dev
