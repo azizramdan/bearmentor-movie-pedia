@@ -5,8 +5,8 @@ import { dbRoute } from './db/seed'
 import { WelcomePage } from './welcome'
 
 export default new OpenAPIHono({ strict: false })
-  .route('/api/movies', moviesRoute)
   .route('/api/db', dbRoute)
+  .route('/api/movies', moviesRoute)
 
   .doc31('/api-spec', {
     openapi: '3.1.0',
