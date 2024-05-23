@@ -53,6 +53,36 @@ bun run dev
 
 Afterwards, open your browser and navigate to http://localhost:3000 to start exploring the API.
 
+## Running with Docker
+
+To run the application using Docker, follow these steps:
+
+Set up `.env` by copying from `.env.example` for reference
+
+```sh
+cp .env.example .env
+```
+
+Build the docker images
+
+```sh
+docker compose build
+```
+
+Run the containers
+
+```sh
+docker compose up -d
+```
+
+Perform the database migration
+
+```sh
+docker compose exec app bun run db:migrate
+```
+
+Now you can access the application by opening your browser and navigating to http://localhost:3000.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
