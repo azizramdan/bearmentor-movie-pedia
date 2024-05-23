@@ -2,6 +2,12 @@
 
 MoviePedia REST API is a web service that provides access to a vast collection of movie data. It allows users to search for movies, retrieve movie details, and perform various operations related to movies.
 
+## Tech Stack
+
+- [Hono](https://hono.dev/) over [Bun](https://bun.sh/) runtime
+- [Drizzle ORM](https://orm.drizzle.team/)
+- [PostgreSQL](https://www.postgresql.org/)
+
 ## API Specification
 
 The OpenAPI Specification for the MoviePedia API offers a detailed description of the API's services. It can be accessed at the path `/api-spec`.
@@ -12,6 +18,10 @@ You can also access the following:
 
 - OpenAPI Specification: https://bearmentor-moviepedia.azizramdan.id/api-spec
 - SwaggerUI: https://bearmentor-moviepedia.azizramdan.id/api
+
+## Database Design
+
+![ERD](./assets/erd.svg)
 
 ## Getting Started
 
@@ -40,12 +50,6 @@ bun run dev
 ```
 
 Afterwards, open your browser and navigate to http://localhost:3000 to start exploring the API.
-
-## Tech Stack
-
-- [Hono](https://hono.dev/) over [Bun](https://bun.sh/) runtime
-- [Drizzle ORM](https://orm.drizzle.team/)
-- [PostgreSQL](https://www.postgresql.org/)
 
 ## License
 
