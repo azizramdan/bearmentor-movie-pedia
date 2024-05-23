@@ -171,7 +171,11 @@ export const moviesRoute = new OpenAPIHono()
       }
 
       await movieService.update(id, body)
+      const movie = await movieService.getById(id)
 
-      return c.json({ message: 'Movie updated' })
+      return c.json({
+        message: 'Movie updated',
+        data: movie,
+      })
     },
   )
