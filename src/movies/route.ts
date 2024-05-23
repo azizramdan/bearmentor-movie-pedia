@@ -20,7 +20,10 @@ export const moviesRoute = new OpenAPIHono()
     async (c) => {
       const movies = await movieService.getAll()
 
-      return c.json(movies)
+      return c.json({
+        message: 'Success',
+        data: movies,
+      })
     },
   )
 
@@ -49,7 +52,10 @@ export const moviesRoute = new OpenAPIHono()
         return c.json({ message: 'Movie not found' }, 404)
       }
 
-      return c.json(movie)
+      return c.json({
+        message: 'Success',
+        data: movie,
+      })
     },
   )
 
@@ -80,7 +86,10 @@ export const moviesRoute = new OpenAPIHono()
       const movieId = await movieService.create(body)
       const movie = await movieService.getById(movieId)
 
-      return c.json(movie, 201)
+      return c.json({
+        message: 'Success',
+        data: movie,
+      }, 201)
     },
   )
 
@@ -99,7 +108,7 @@ export const moviesRoute = new OpenAPIHono()
     async (c) => {
       await movieService.deleteAll()
 
-      return c.json({ message: 'Movies deleted' })
+      return c.json({ message: 'Success' })
     },
   )
 
@@ -131,7 +140,7 @@ export const moviesRoute = new OpenAPIHono()
 
       await movieService.deleteById(id)
 
-      return c.json({ message: 'Movie deleted' })
+      return c.json({ message: 'Success' })
     },
   )
 
@@ -174,7 +183,7 @@ export const moviesRoute = new OpenAPIHono()
       const movie = await movieService.getById(id)
 
       return c.json({
-        message: 'Movie updated',
+        message: 'Success',
         data: movie,
       })
     },
