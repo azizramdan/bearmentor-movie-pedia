@@ -19,9 +19,9 @@ export default new OpenAPIHono({ strict: false })
   .doc31('/api-spec', {
     openapi: '3.1.0',
     info: {
-      version: '0.4.0',
+      version: '0.4.1',
       title: 'MoviePedia API',
-      description: 'Explore a world of cinematic insights with ease using the **MoviePedia API**. Access comprehensive movie data for seamless exploration and discovery.',
+      description: 'MoviePedia REST API is a web service that provides access to a vast collection of movie data. It allows users to search for movies, retrieve movie details, and perform various operations related to movies.',
     },
   })
   .get('/api', swaggerUI({ url: '/api-spec' }))
