@@ -8,11 +8,11 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "${DB_PORT}:5432"
+      - "${DOCKER_POSTGRES_PORT}:5432"
     environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_PASSWORD: ${DOCKER_POSTGRES_PASSWORD}
+      POSTGRES_USER: ${DOCKER_POSTGRES_USER}
+      POSTGRES_DB: ${DOCKER_POSTGRES_DB}
 
   app:
     build:
@@ -21,4 +21,4 @@ services:
     image: azizramdan/bearmentor-moviepedia-app
     restart: always
     ports:
-      - "${APP_PORT}:3000"
+      - "${DOCKER_APP_PORT}:3000"

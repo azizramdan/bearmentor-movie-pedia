@@ -5,7 +5,11 @@ export default defineConfig({
   out: './src/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: String(process.env.DATABASE_URL),
+    host: process.env.DB_HOST!,
+    port: Number(process.env.DB_PORT),
+    database: process.env.DB_DATABASE!,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
   },
   verbose: true,
   strict: true,
