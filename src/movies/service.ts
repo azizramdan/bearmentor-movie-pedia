@@ -149,27 +149,27 @@ export async function create(data: z.infer<typeof MovieRequestSchema>) {
         id: dbSchema.movies.id,
       }))[0].id
 
-    const [genreIds, directorIds, writerIds, actorIds] = await Promise.all([
-      getGenreIds(data.genres),
-      getDirectorIds(data.directors),
-      getWriterIds(data.writers),
-      getActorIds(data.actors),
+    const [validGenreIds, validDirectorIds, validWriterIds, validActorIds] = await Promise.all([
+      getValidGenreIds(data.genres || []),
+      getValidDirectorIds(data.directors || []),
+      getValidWriterIds(data.writers || []),
+      getValidActorIds(data.actors || []),
     ])
 
     await Promise.all([
-      genreIds.length && tx.insert(dbSchema.moviesToGenres).values(genreIds.map(genreId => ({
+      validGenreIds.length && tx.insert(dbSchema.moviesToGenres).values(validGenreIds.map(genreId => ({
         genreId,
         movieId,
       }))),
-      directorIds.length && tx.insert(dbSchema.moviesToDirectors).values(directorIds.map(directorId => ({
+      validDirectorIds.length && tx.insert(dbSchema.moviesToDirectors).values(validDirectorIds.map(directorId => ({
         directorId,
         movieId,
       }))),
-      writerIds.length && tx.insert(dbSchema.moviesToWriters).values(writerIds.map(writerId => ({
+      validWriterIds.length && tx.insert(dbSchema.moviesToWriters).values(validWriterIds.map(writerId => ({
         writerId,
         movieId,
       }))),
-      actorIds.length && tx.insert(dbSchema.moviesToActors).values(actorIds.map(actorId => ({
+      validActorIds.length && tx.insert(dbSchema.moviesToActors).values(validActorIds.map(actorId => ({
         actorId,
         movieId,
       }))),
@@ -188,87 +188,101 @@ export async function deleteById(id: number) {
 }
 
 export async function update(id: number, data: Partial<z.infer<typeof MovieRequestSchema>>) {
+  if (Object.keys(data).length === 0) {
+    return
+  }
+
   await db.transaction(async (tx) => {
     await tx.update(dbSchema.movies)
       .set(data)
       .where(eq(dbSchema.movies.id, id))
 
-    const [genreIds, directorIds, writerIds, actorIds] = await Promise.all([
-      getGenreIds(data.genres),
-      getDirectorIds(data.directors),
-      getWriterIds(data.writers),
-      getActorIds(data.actors),
+    const [validGenreIds, validDirectorIds, validWriterIds, validActorIds] = await Promise.all([
+      getValidGenreIds(data.genres || []),
+      getValidDirectorIds(data.directors || []),
+      getValidWriterIds(data.writers || []),
+      getValidActorIds(data.actors || []),
     ])
 
-    const updateGenres = async () => {
-      if (!genreIds || !genreIds.length) {
-        return
-      }
+    /**
+     * 1. if data.<relation> is undefined, no change is made
+     * 2. if data.<relation> is an empty array, remove all relations
+     * 3. if data.<relation> is a non-empty array but valid<relation>Ids is empty, treat it as point 2
+     */
 
+    const updateGenres = async () => {
       await Promise.all([
-        tx.insert(dbSchema.moviesToGenres)
-          .values((genreIds).map(genreId => ({
+        validGenreIds.length && tx.insert(dbSchema.moviesToGenres)
+          .values((validGenreIds).map(genreId => ({
             genreId,
             movieId: id,
           })))
           .onConflictDoNothing(),
 
-        tx.delete(dbSchema.moviesToGenres)
-          .where(and(eq(dbSchema.moviesToGenres.movieId, id), notInArray(dbSchema.moviesToGenres.genreId, genreIds))),
+        data.genres && tx.delete(dbSchema.moviesToGenres)
+          .where(and(
+            eq(dbSchema.moviesToGenres.movieId, id),
+            data.genres.length
+              ? notInArray(dbSchema.moviesToGenres.genreId, data.genres)
+              : undefined,
+          )),
       ])
     }
 
     const updateDirectors = async () => {
-      if (!directorIds || !directorIds.length) {
-        return
-      }
-
       await Promise.all([
-        tx.insert(dbSchema.moviesToDirectors)
-          .values((directorIds).map(directorId => ({
+        validDirectorIds.length && tx.insert(dbSchema.moviesToDirectors)
+          .values((validDirectorIds).map(directorId => ({
             directorId,
             movieId: id,
           })))
           .onConflictDoNothing(),
 
-        tx.delete(dbSchema.moviesToDirectors)
-          .where(and(eq(dbSchema.moviesToDirectors.movieId, id), notInArray(dbSchema.moviesToDirectors.directorId, directorIds))),
+        data.directors && tx.delete(dbSchema.moviesToDirectors)
+          .where(and(
+            eq(dbSchema.moviesToDirectors.movieId, id),
+            data.directors.length
+              ? notInArray(dbSchema.moviesToDirectors.directorId, data.directors)
+              : undefined,
+          )),
       ])
     }
 
     const updateWriters = async () => {
-      if (!writerIds || !writerIds.length) {
-        return
-      }
-
       await Promise.all([
-        tx.insert(dbSchema.moviesToWriters)
-          .values((writerIds).map(writerId => ({
+        validWriterIds.length && tx.insert(dbSchema.moviesToWriters)
+          .values((validWriterIds).map(writerId => ({
             writerId,
             movieId: id,
           })))
           .onConflictDoNothing(),
 
-        tx.delete(dbSchema.moviesToWriters)
-          .where(and(eq(dbSchema.moviesToWriters.movieId, id), notInArray(dbSchema.moviesToWriters.writerId, writerIds))),
+        data.writers && tx.delete(dbSchema.moviesToWriters)
+          .where(and(
+            eq(dbSchema.moviesToWriters.movieId, id),
+            data.writers.length
+              ? notInArray(dbSchema.moviesToWriters.writerId, data.writers)
+              : undefined,
+          )),
       ])
     }
 
     const updateActors = async () => {
-      if (!actorIds || !actorIds.length) {
-        return
-      }
-
       await Promise.all([
-        tx.insert(dbSchema.moviesToActors)
-          .values((actorIds).map(actorId => ({
+        validActorIds.length && tx.insert(dbSchema.moviesToActors)
+          .values((validActorIds).map(actorId => ({
             actorId,
             movieId: id,
           })))
           .onConflictDoNothing(),
 
-        tx.delete(dbSchema.moviesToActors)
-          .where(and(eq(dbSchema.moviesToActors.movieId, id), notInArray(dbSchema.moviesToActors.actorId, actorIds))),
+        data.actors && tx.delete(dbSchema.moviesToActors)
+          .where(and(
+            eq(dbSchema.moviesToActors.movieId, id),
+            data.actors.length
+              ? notInArray(dbSchema.moviesToActors.actorId, data.actors)
+              : undefined,
+          )),
       ])
     }
 
@@ -290,8 +304,8 @@ export async function isExists(id: number) {
   return Boolean(exists)
 }
 
-async function getGenreIds(ids: Array<number> | undefined) {
-  if (!ids || !ids.length) {
+async function getValidGenreIds(ids: Array<number>) {
+  if (!ids.length) {
     return []
   }
 
@@ -303,8 +317,8 @@ async function getGenreIds(ids: Array<number> | undefined) {
     .map(genre => genre.id)
 }
 
-async function getDirectorIds(ids: Array<number> | undefined) {
-  if (!ids || !ids.length) {
+async function getValidDirectorIds(ids: Array<number>) {
+  if (!ids.length) {
     return []
   }
 
@@ -316,8 +330,8 @@ async function getDirectorIds(ids: Array<number> | undefined) {
     .map(director => director.id)
 }
 
-async function getWriterIds(ids: Array<number> | undefined) {
-  if (!ids || !ids.length) {
+async function getValidWriterIds(ids: Array<number>) {
+  if (!ids.length) {
     return []
   }
 
@@ -329,8 +343,8 @@ async function getWriterIds(ids: Array<number> | undefined) {
     .map(writer => writer.id)
 }
 
-async function getActorIds(ids: Array<number> | undefined) {
-  if (!ids || !ids.length) {
+async function getValidActorIds(ids: Array<number>) {
+  if (!ids.length) {
     return []
   }
 
