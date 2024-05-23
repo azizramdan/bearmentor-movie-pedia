@@ -46,3 +46,7 @@ Afterwards, open your browser and navigate to http://localhost:3000 to start exp
 - [Hono](https://hono.dev/)
 - [Drizzle ORM](https://orm.drizzle.team/)
 - [PostgreSQL](https://www.postgresql.org/)
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
