@@ -5,17 +5,19 @@ import { dbRoute } from './db/route'
 import { WelcomePage } from './welcome'
 import { genresRoute } from './genres/route'
 import { directorsRoute } from './directors/route'
+import { writersRoute } from './writers/route'
 
 export default new OpenAPIHono({ strict: false })
   .route('/api/db', dbRoute)
   .route('/api/movies', moviesRoute)
   .route('/api/genres', genresRoute)
   .route('/api/directors', directorsRoute)
+  .route('/api/writers', writersRoute)
 
   .doc31('/api-spec', {
     openapi: '3.1.0',
     info: {
-      version: '0.2.0',
+      version: '0.3.0',
       title: 'MoviePedia API',
       description: 'Explore a world of cinematic insights with ease using the **MoviePedia API**. Access comprehensive movie data for seamless exploration and discovery.',
     },
