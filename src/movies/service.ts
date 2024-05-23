@@ -1,4 +1,4 @@
-import { and, eq, notInArray } from 'drizzle-orm'
+import { and, eq, inArray, notInArray } from 'drizzle-orm'
 import type { z } from 'zod'
 import { db } from '../db/db'
 import * as dbSchema from '../db/schema'
@@ -143,28 +143,39 @@ export async function getById(id: number) {
 
 export async function create(data: z.infer<typeof MovieRequestSchema>) {
   return await db.transaction(async (tx) => {
-    const movie = (await tx.insert(dbSchema.movies).values(data).returning())[0]
+    const movieId = (await tx.insert(dbSchema.movies)
+      .values(data)
+      .returning({
+        id: dbSchema.movies.id,
+      }))[0].id
+
+    const [genreIds, directorIds, writerIds, actorIds] = await Promise.all([
+      getGenreIds(data.genres),
+      getDirectorIds(data.directors),
+      getWriterIds(data.writers),
+      getActorIds(data.actors),
+    ])
 
     await Promise.all([
-      tx.insert(dbSchema.moviesToGenres).values(data.genres.map(genreId => ({
+      genreIds.length && tx.insert(dbSchema.moviesToGenres).values(genreIds.map(genreId => ({
         genreId,
-        movieId: movie.id,
+        movieId,
       }))),
-      tx.insert(dbSchema.moviesToDirectors).values(data.directors.map(directorId => ({
+      directorIds.length && tx.insert(dbSchema.moviesToDirectors).values(directorIds.map(directorId => ({
         directorId,
-        movieId: movie.id,
+        movieId,
       }))),
-      tx.insert(dbSchema.moviesToWriters).values(data.writers.map(writerId => ({
+      writerIds.length && tx.insert(dbSchema.moviesToWriters).values(writerIds.map(writerId => ({
         writerId,
-        movieId: movie.id,
+        movieId,
       }))),
-      tx.insert(dbSchema.moviesToActors).values(data.actors.map(actorId => ({
+      actorIds.length && tx.insert(dbSchema.moviesToActors).values(actorIds.map(actorId => ({
         actorId,
-        movieId: movie.id,
+        movieId,
       }))),
     ])
 
-    return movie
+    return movieId
   })
 }
 
@@ -275,4 +286,56 @@ export async function isExists(id: number) {
   })
 
   return Boolean(exists)
+}
+
+async function getGenreIds(ids: Array<number> | undefined) {
+  if (!ids || !ids.length) {
+    return []
+  }
+
+  return (await db.query.genres
+    .findMany({
+      columns: { id: true },
+      where: (inArray(dbSchema.genres.id, ids)),
+    }))
+    .map(genre => genre.id)
+}
+
+async function getDirectorIds(ids: Array<number> | undefined) {
+  if (!ids || !ids.length) {
+    return []
+  }
+
+  return (await db.query.directors
+    .findMany({
+      columns: { id: true },
+      where: (inArray(dbSchema.directors.id, ids)),
+    }))
+    .map(director => director.id)
+}
+
+async function getWriterIds(ids: Array<number> | undefined) {
+  if (!ids || !ids.length) {
+    return []
+  }
+
+  return (await db.query.writers
+    .findMany({
+      columns: { id: true },
+      where: (inArray(dbSchema.writers.id, ids)),
+    }))
+    .map(writer => writer.id)
+}
+
+async function getActorIds(ids: Array<number> | undefined) {
+  if (!ids || !ids.length) {
+    return []
+  }
+
+  return (await db.query.actors
+    .findMany({
+      columns: { id: true },
+      where: (inArray(dbSchema.actors.id, ids)),
+    }))
+    .map(actor => actor.id)
 }

@@ -77,7 +77,8 @@ export const moviesRoute = new OpenAPIHono()
     async (c) => {
       const body = c.req.valid('json')
 
-      const movie = await movieService.create(body)
+      const movieId = await movieService.create(body)
+      const movie = await movieService.getById(movieId)
 
       return c.json(movie, 201)
     },
