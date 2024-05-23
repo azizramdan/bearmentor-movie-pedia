@@ -3,15 +3,17 @@ import { OpenAPIHono } from '@hono/zod-openapi'
 import { moviesRoute } from './movies/route'
 import { dbRoute } from './db/route'
 import { WelcomePage } from './welcome'
+import { genresRoute } from './genres/route'
 
 export default new OpenAPIHono({ strict: false })
   .route('/api/db', dbRoute)
   .route('/api/movies', moviesRoute)
+  .route('/api/genres', genresRoute)
 
   .doc31('/api-spec', {
     openapi: '3.1.0',
     info: {
-      version: '0.0.1',
+      version: '0.1.0',
       title: 'MoviePedia API',
       description: 'Explore a world of cinematic insights with ease using the **MoviePedia API**. Access comprehensive movie data for seamless exploration and discovery.',
     },
