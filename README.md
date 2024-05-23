@@ -43,7 +43,7 @@ Afterwards, open your browser and navigate to http://localhost:3000 to start exp
 
 ## Tech Stack
 
-- [Hono](https://hono.dev/)
+- [Hono](https://hono.dev/) over [Bun](https://bun.sh/) runtime
 - [Drizzle ORM](https://orm.drizzle.team/)
 - [PostgreSQL](https://www.postgresql.org/)
 
