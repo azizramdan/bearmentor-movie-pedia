@@ -40,3 +40,9 @@ bun run dev
 ```
 
 Afterwards, open your browser and navigate to http://localhost:3000 to start exploring the API.
+
+## Tech Stack
+
+- [Hono](https://hono.dev/)
+- [Drizzle ORM](https://orm.drizzle.team/)
+- [PostgreSQL](https://www.postgresql.org/)
