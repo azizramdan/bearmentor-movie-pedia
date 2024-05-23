@@ -10,6 +10,7 @@ export const moviesRoute = new OpenAPIHono()
     {
       method: 'get',
       path: '/',
+      description: 'Get all movies',
       responses: {
         200: {
           description: 'List of movies',
@@ -32,6 +33,7 @@ export const moviesRoute = new OpenAPIHono()
     {
       method: 'get',
       path: '/{id}',
+      description: 'Get movie by id',
       request: {
         params: MovieIdSchema,
       },
@@ -64,6 +66,7 @@ export const moviesRoute = new OpenAPIHono()
     {
       method: 'post',
       path: '/',
+      description: 'Create a new movie',
       request: {
         body: {
           content: {
@@ -98,6 +101,7 @@ export const moviesRoute = new OpenAPIHono()
     {
       method: 'delete',
       path: '/',
+      description: 'Delete all movies',
       responses: {
         200: {
           description: 'Movies deleted',
@@ -117,6 +121,7 @@ export const moviesRoute = new OpenAPIHono()
     {
       method: 'delete',
       path: '/{id}',
+      description: 'Delete movie by id',
       request: {
         params: MovieIdSchema,
       },
@@ -149,6 +154,7 @@ export const moviesRoute = new OpenAPIHono()
     {
       method: 'put',
       path: '/{id}',
+      description: 'Update movie by id',
       request: {
         params: MovieIdSchema,
         body: {
