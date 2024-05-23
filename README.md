@@ -21,6 +21,8 @@ You can also access the following:
 
 ## Database Design
 
+To view the database design in more detail, you can navigate to the following link: [ERD](https://dbdiagram.io/d/bearmentor-moviepedia-664f6093f84ecd1d22faab40)
+
 ![ERD](./assets/erd.svg)
 
 ## Getting Started
