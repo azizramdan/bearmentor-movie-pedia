@@ -19,7 +19,7 @@ export default new OpenAPIHono({ strict: false })
   .doc31('/api-spec', {
     openapi: '3.1.0',
     info: {
-      version: '0.5.0',
+      version: '0.5.1',
       title: 'MoviePedia API',
       description: 'MoviePedia REST API is a web service that provides access to a vast collection of movie data. It allows users to search for movies, retrieve movie details, and perform various operations related to movies.',
     },
