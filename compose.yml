@@ -22,3 +22,5 @@ services:
     restart: always
     ports:
       - "${DOCKER_APP_PORT}:3000"
+    env_file:
+      - .env
