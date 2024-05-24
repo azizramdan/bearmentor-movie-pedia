@@ -83,6 +83,14 @@ docker compose exec app bun run db:migrate
 
 Now you can access the application by opening your browser and navigating to http://localhost:3000.
 
+Alternatively, you can use the pre-built Docker image available on Docker Hub:
+
+```sh
+docker pull azizramdan/bearmentor-moviepedia-app
+```
+
+For more information, visit the Docker Hub repository: [azizramdan/bearmentor-moviepedia-app](https://hub.docker.com/r/azizramdan/bearmentor-moviepedia-app).
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
