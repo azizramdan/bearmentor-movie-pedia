@@ -1,12 +1,23 @@
-import { and, eq, inArray, notInArray } from 'drizzle-orm'
+import { and, eq, ilike, inArray, notInArray } from 'drizzle-orm'
 import type { z } from 'zod'
 import { db } from '../db/db'
 import * as dbSchema from '../db/schema'
-import type { MovieRequestSchema } from './schema'
+import type { MovieRequestSchema, QueryMovieSchema } from './schema'
 
-export async function getAll() {
+export async function getAll(query?: z.infer<typeof QueryMovieSchema>) {
   return (await db.query.movies
     .findMany({
+      where: (and(
+        query?.title
+          ? ilike(dbSchema.movies.title, `%${query.title}%`)
+          : undefined,
+        query?.year
+          ? eq(dbSchema.movies.year, query.year)
+          : undefined,
+        query?.type
+          ? eq(dbSchema.movies.type, query.type)
+          : undefined,
+      )),
       with: {
         moviesToGenres: {
           columns: {},

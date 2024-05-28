@@ -1,5 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
-import { MovieIdSchema, MovieRequestSchema } from './schema'
+import { MovieIdSchema, MovieRequestSchema, QueryMovieSchema } from './schema'
 import * as movieService from './service'
 
 const API_TAG = ['Movies']
@@ -11,6 +11,9 @@ export const moviesRoute = new OpenAPIHono()
       method: 'get',
       path: '/',
       description: 'Get all movies',
+      request: {
+        query: QueryMovieSchema,
+      },
       responses: {
         200: {
           description: 'List of movies',
@@ -19,7 +22,7 @@ export const moviesRoute = new OpenAPIHono()
       tags: API_TAG,
     },
     async (c) => {
-      const movies = await movieService.getAll()
+      const movies = await movieService.getAll(c.req.query())
 
       return c.json({
         message: 'Success',

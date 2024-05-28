@@ -16,3 +16,9 @@ export const MovieRequestSchema = z
 export const MovieIdSchema = z.object({
   id: z.coerce.number().int().min(1),
 })
+
+export const QueryMovieSchema = z.object({
+  title: z.string().optional(),
+  year: z.coerce.number().int().min(1900).max(2100).optional(),
+  type: z.enum(['movie', 'series']).optional(),
+})
