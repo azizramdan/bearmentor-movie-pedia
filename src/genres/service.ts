@@ -1,11 +1,17 @@
-import { eq } from 'drizzle-orm'
+import { eq, ilike } from 'drizzle-orm'
 import type { z } from 'zod'
 import { db } from '../db/db'
 import * as dbSchema from '../db/schema'
-import type { GenreRequestSchema } from './schema'
+import type { GenreRequestSchema, QueryGenreSchema } from './schema'
 
-export async function getAll() {
-  return await db.query.genres.findMany()
+export async function getAll(query?: z.infer<typeof QueryGenreSchema>) {
+  return await db.query.genres.findMany({
+    where: (
+      query?.name
+        ? ilike(dbSchema.genres.name, `%${query.name}%`)
+        : undefined
+    ),
+  })
 }
 
 export async function getById(id: number) {

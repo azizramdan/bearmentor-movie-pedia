@@ -8,3 +8,7 @@ export const GenreRequestSchema = z
 export const GenreIdSchema = z.object({
   id: z.coerce.number().int().min(1),
 })
+
+export const QueryGenreSchema = z.object({
+  name: z.string().optional(),
+})

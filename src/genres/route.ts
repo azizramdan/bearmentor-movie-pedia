@@ -1,5 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
-import { GenreIdSchema, GenreRequestSchema } from './schema'
+import { GenreIdSchema, GenreRequestSchema, QueryGenreSchema } from './schema'
 import * as genreService from './service'
 
 const API_TAG = ['Genres']
@@ -11,6 +11,9 @@ export const genresRoute = new OpenAPIHono()
       method: 'get',
       path: '/',
       description: 'Get all genres',
+      request: {
+        query: QueryGenreSchema,
+      },
       responses: {
         200: {
           description: 'List of genres',
@@ -19,7 +22,7 @@ export const genresRoute = new OpenAPIHono()
       tags: API_TAG,
     },
     async (c) => {
-      const genres = await genreService.getAll()
+      const genres = await genreService.getAll(c.req.query())
 
       return c.json({
         message: 'Success',
