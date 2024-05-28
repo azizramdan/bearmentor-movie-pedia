@@ -8,3 +8,7 @@ export const WriterRequestSchema = z
 export const WriterIdSchema = z.object({
   id: z.coerce.number().int().min(1),
 })
+
+export const QueryWriterSchema = z.object({
+  name: z.string().optional(),
+})

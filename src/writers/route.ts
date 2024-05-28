@@ -1,5 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
-import { WriterIdSchema, WriterRequestSchema } from './schema'
+import { QueryWriterSchema, WriterIdSchema, WriterRequestSchema } from './schema'
 import * as writerService from './service'
 
 const API_TAG = ['Writers']
@@ -11,6 +11,9 @@ export const writersRoute = new OpenAPIHono()
       method: 'get',
       path: '/',
       description: 'Get all writers',
+      request: {
+        query: QueryWriterSchema,
+      },
       responses: {
         200: {
           description: 'List of writers',
@@ -19,7 +22,7 @@ export const writersRoute = new OpenAPIHono()
       tags: API_TAG,
     },
     async (c) => {
-      const writers = await writerService.getAll()
+      const writers = await writerService.getAll(c.req.query())
 
       return c.json({
         message: 'Success',
