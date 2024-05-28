@@ -1,11 +1,17 @@
-import { eq } from 'drizzle-orm'
+import { eq, ilike } from 'drizzle-orm'
 import type { z } from 'zod'
 import { db } from '../db/db'
 import * as dbSchema from '../db/schema'
-import type { ActorRequestSchema } from './schema'
+import type { ActorRequestSchema, QueryActorSchema } from './schema'
 
-export async function getAll() {
-  return await db.query.actors.findMany()
+export async function getAll(query?: z.infer<typeof QueryActorSchema>) {
+  return await db.query.actors.findMany({
+    where: (
+      query?.name
+        ? ilike(dbSchema.actors.name, `%${query.name}%`)
+        : undefined
+    ),
+  })
 }
 
 export async function getById(id: number) {

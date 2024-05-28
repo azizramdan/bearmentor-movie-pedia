@@ -8,3 +8,7 @@ export const ActorRequestSchema = z
 export const ActorIdSchema = z.object({
   id: z.coerce.number().int().min(1),
 })
+
+export const QueryActorSchema = z.object({
+  name: z.string().optional(),
+})

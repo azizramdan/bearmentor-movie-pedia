@@ -1,5 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
-import { ActorIdSchema, ActorRequestSchema } from './schema'
+import { ActorIdSchema, ActorRequestSchema, QueryActorSchema } from './schema'
 import * as actorService from './service'
 
 const API_TAG = ['Actors']
@@ -11,6 +11,9 @@ export const actorsRoute = new OpenAPIHono()
       method: 'get',
       path: '/',
       description: 'Get all actors',
+      request: {
+        query: QueryActorSchema,
+      },
       responses: {
         200: {
           description: 'List of actors',
@@ -19,7 +22,7 @@ export const actorsRoute = new OpenAPIHono()
       tags: API_TAG,
     },
     async (c) => {
-      const actors = await actorService.getAll()
+      const actors = await actorService.getAll(c.req.query())
 
       return c.json({
         message: 'Success',
