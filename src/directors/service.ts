@@ -1,11 +1,17 @@
-import { eq } from 'drizzle-orm'
+import { eq, ilike } from 'drizzle-orm'
 import type { z } from 'zod'
 import { db } from '../db/db'
 import * as dbSchema from '../db/schema'
-import type { DirectorRequestSchema } from './schema'
+import type { DirectorRequestSchema, QueryDirectorSchema } from './schema'
 
-export async function getAll() {
-  return await db.query.directors.findMany()
+export async function getAll(query?: z.infer<typeof QueryDirectorSchema>) {
+  return await db.query.directors.findMany({
+    where: (
+      query?.name
+        ? ilike(dbSchema.directors.name, `%${query.name}%`)
+        : undefined
+    ),
+  })
 }
 
 export async function getById(id: number) {

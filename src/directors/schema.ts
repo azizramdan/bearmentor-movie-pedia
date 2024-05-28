@@ -8,3 +8,7 @@ export const DirectorRequestSchema = z
 export const DirectorIdSchema = z.object({
   id: z.coerce.number().int().min(1),
 })
+
+export const QueryDirectorSchema = z.object({
+  name: z.string().optional(),
+})

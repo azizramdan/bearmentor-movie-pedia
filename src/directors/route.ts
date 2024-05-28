@@ -1,5 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
-import { DirectorIdSchema, DirectorRequestSchema } from './schema'
+import { DirectorIdSchema, DirectorRequestSchema, QueryDirectorSchema } from './schema'
 import * as directorService from './service'
 
 const API_TAG = ['Directors']
@@ -11,6 +11,9 @@ export const directorsRoute = new OpenAPIHono()
       method: 'get',
       path: '/',
       description: 'Get all directors',
+      request: {
+        query: QueryDirectorSchema,
+      },
       responses: {
         200: {
           description: 'List of directors',
@@ -19,7 +22,7 @@ export const directorsRoute = new OpenAPIHono()
       tags: API_TAG,
     },
     async (c) => {
-      const directors = await directorService.getAll()
+      const directors = await directorService.getAll(c.req.query())
 
       return c.json({
         message: 'Success',
