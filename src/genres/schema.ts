@@ -11,4 +11,6 @@ export const GenreIdSchema = z.object({
 
 export const QueryGenreSchema = z.object({
   name: z.string().optional(),
+  sortBy: z.enum(['name', 'createdAt', 'updatedAt']).optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 })

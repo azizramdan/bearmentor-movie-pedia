@@ -1,4 +1,4 @@
-import { eq, ilike } from 'drizzle-orm'
+import { desc, eq, ilike } from 'drizzle-orm'
 import type { z } from 'zod'
 import { db } from '../db/db'
 import * as dbSchema from '../db/schema'
@@ -11,6 +11,9 @@ export async function getAll(query?: z.infer<typeof QueryWriterSchema>) {
         ? ilike(dbSchema.writers.name, `%${query.name}%`)
         : undefined
     ),
+    orderBy: query?.sortBy
+      ? [query.sortOrder === 'desc' ? desc(dbSchema.writers[query.sortBy]) : dbSchema.writers[query.sortBy]]
+      : dbSchema.writers.id,
   })
 }
 

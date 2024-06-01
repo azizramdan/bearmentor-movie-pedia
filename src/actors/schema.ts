@@ -11,4 +11,6 @@ export const ActorIdSchema = z.object({
 
 export const QueryActorSchema = z.object({
   name: z.string().optional(),
+  sortBy: z.enum(['name', 'createdAt', 'updatedAt']).optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 })
