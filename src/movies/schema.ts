@@ -21,4 +21,6 @@ export const QueryMovieSchema = z.object({
   title: z.string().optional(),
   year: z.coerce.number().int().min(1900).max(2100).optional(),
   type: z.enum(['movie', 'series']).optional(),
+  sortBy: z.enum(['title', 'year', 'createdAt', 'updatedAt']).optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 })

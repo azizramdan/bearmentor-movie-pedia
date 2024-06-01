@@ -1,4 +1,4 @@
-import { and, eq, ilike, inArray, notInArray } from 'drizzle-orm'
+import { and, desc, eq, ilike, inArray, notInArray } from 'drizzle-orm'
 import type { z } from 'zod'
 import { db } from '../db/db'
 import * as dbSchema from '../db/schema'
@@ -18,6 +18,9 @@ export async function getAll(query?: z.infer<typeof QueryMovieSchema>) {
           ? eq(dbSchema.movies.type, query.type)
           : undefined,
       )),
+      orderBy: query?.sortBy
+        ? [query.sortOrder === 'desc' ? desc(dbSchema.movies[query.sortBy]) : dbSchema.movies[query.sortBy]]
+        : [dbSchema.movies.id],
       with: {
         moviesToGenres: {
           columns: {},
